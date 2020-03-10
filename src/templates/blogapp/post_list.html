@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="media content-section">
+  <form class="form-inline">
+  <input class="form-control mr-3" placeholder="Search" value="{{ request.GET.si }}" type="text" name="si" />
+  <input class="btn btn-dark mr-3" type="submit" value="Search" />
+  <a id="qq" class="btn btn-dark" href="{% url 'post_new' %}" ><span class="glyphicon glyphicon-plus-sign"></span></a>
+  </form>
+  <div class="row">
+    <div class="col-md-6">
+      <br>
+        {% for post in post_list %}
+          <article class="jumbotron">
+            <div class="media-body">
+              <div class="article-metadata">
+                <img src="{{post.author.image.url}}" class="img-circle" alt="" width="50px;" height="50px;">
+                <a class="mr-2" href="{% url 'profile' post.author.pk %}">{{ post.author }}</a><br>
+                <small class="text-muted">{{ post.published_date|date:"F d, Y"}}</small>
+              </div>
+              <legend class="border-bottom mb-4"></legend>
+                <h3>{{ post.title }}</h3>
+                <a href="{% url 'post_detail' pk=post.pk  %}"><button type="button" class="btn btn-info btn-sm">Read More</button></a>
+                <legend class="border-bottom mb-4"></legend>
+                  {% if post.liked %}
+                    <a class="btn btn-primary btn-sm" href="{% url 'unlike' pk=post.pk %}"><span class="glyphicon glyphicon-thumbs-up"></span></a>
+                  {% else %}
+                    <a class="btn btn-default btn-sm" href="{% url 'like' pk=post.pk %}"><span class="glyphicon glyphicon-thumbs-up"></span></a>
+                  {% endif %}
+                  <span class="badge badge-info" style="margin:5px;">Likes {{post.likedno}}</span>
+                <a href="{% url 'post_detail' pk=post.pk %}" style="margin:20px;">Comments: <span class="badge">{{ post.approve_comments.count }}</span></a><br>
+            </div>
+
+          </article>
+        {% endfor %}
+    </div>
+  </div>
+
+
+</div>
+<br>
+<div class="pagination">
+  {% if is_paginated %}
+    {% if page_obj.has_previous %}
+      <a class="btn btn-default mb-4" href="?page=1">Frist</a>
+      <a class="btn btn-default mb-4" href="?page={{page_obj.previous_page_number}}">Previous</a>
+    {% endif %}
+
+    {% for num in page_obj.paginator.page_range %}
+      {% if page_obj.number == num %}
+        <a class="btn btn-primary mb-4" href="?page={{ num }}">{{ num }}</a>
+      {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'-3' %}
+        <a class="btn btn-primary mb-4" href="?page={{ num }}">{{ num }}</a>
+      {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+      <a class="btn btn-default mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
+      <a class="btn btn-default mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+    {% endif %}
+  {% endif %}
+
+</div>
+{% endblock %}

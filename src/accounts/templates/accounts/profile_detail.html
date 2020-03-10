@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block content %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300,300i,400,400i,700i" rel="stylesheet">
+
+</head>
+<body>
+  <div class="context">
+    <div class="jumbotron" style="width:100%; height:600px;">
+      <h3>Name: {{profile.name}}</h3>
+      <a href="{% url 'Profile_edit' %}" class="btn btn-info" style="float:right; margin-top:-40px;">Profile Edite</a>
+        <div class="image_profile" ">
+          <img src="{{profile.image.url}}"  alt="Cinque Terre" style="width:300px; height:400px; float:left;">
+          <div class="content" style="margin-right: 50px; float:right;">
+            <h3 >UserName: {{profile.user}}</h3>
+            <h3>Bio : {{profile.bio}}</h3>
+            <h3>Email: {{user.email}}</h3>
+            <h3>Phone: {{profile.phone_no}}</h3>
+            <h3>Birthdate: {{profile.birthdate}}</h3>
+            <h3>Age: {{profile.age}}</h3>
+            <h3>Gender: {{profile.gender}}</h3>
+            <h3>Address: {{profile.address}}</h3>
+            <h3>Relationship Status: {{profile.status}}</h3>
+          </div>
+
+        </div>
+
+    </div>
+  </div>
+  <a  class="btn btn-dark btn-lg" href="{% url 'post_new' %}" data-toggle="tooltip" data-placement="bottom" title="New Post"  ><span class="glyphicon glyphicon-plus-sign"></span></a>
+  <table class="table table-striped">
+        <thead>
+        <tr>
+            <td>Title</td>
+            <td>Posted On</td>
+            <td>Action</td>
+        </tr>
+        </thead>
+        <tbody>
+        {% for p in post %}
+            <tr>
+                <td>{{ p.title }}</td>
+                <td>{{ p.published_date|date:"F d, Y" }}</td>
+                <td><a href="{% url 'post_detail' pk=p.pk  %}" class="btn btn-primary">View Post</a></td>
+            </tr>
+        {% endfor %}
+
+        </tbody>
+</table>
+</body>
+{% endblock %}

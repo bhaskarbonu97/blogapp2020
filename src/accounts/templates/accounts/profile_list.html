@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'accounts/style4.css' %}"/>
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+     <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300,300i,400,400i,700i" rel="stylesheet">
+</head>
+
+<div class="p-5">
+<h1 class="myhead2">Profiles </h1>
+<hr>
+<form class="form-inline">
+<input class="form-control mr-3" placeholder="Search" value="{{ request.GET.si }}" type="text" name="si" />
+<input class="btn btn-dark mr-3" type="submit" value="Search" />
+</form>
+
+{% for profile in profile_list %}
+  <div class="col-md-3 col-sm-6">
+    <div class="our-team">
+        <div class="pic">
+            <img src="{{profile.image.url}}" alt="">
+        </div>
+        <div class="team-content">
+            <h3 class="title">{{profile.name}}</h3>
+            <span class="post">{{profile.user}}</span>
+            <a class="btn btn-primary " href="{% url 'profile' profile.pk %}">View</a>
+            {% if profile.followed %}
+              <a class="btn btn-default btn-sm" href="{% url 'unfollow' profile.pk %}">Following</a>
+            {% else %}
+              <a class="btn btn-primary btn-sm" href="{% url 'follow' profile.pk %}">Follow</a>
+            {% endif %}
+            <p>Follow:<span class="badge">{{ profile.followno }}</span></p>
+        </div>
+        <ul class="social">
+            <li><a href="{{profile.facebook}}" class="fa fa-facebook"></a></li>
+            <li><a href="{{profile.twitter}}" class="fa fa-twitter"></a></li>
+            <li><a href="{{profile.google_plus}}" class="fa fa-google-plus"></a></li>
+            <li><a href="{{profile.instagram}}" class="fa fa-instagram"></a></li>
+        </ul>
+    </div>
+  </div>
+{% endfor %}
+<div class="pagination">
+  <div class="">
+  {% if is_paginated %}
+    {% if page_obj.has_previous %}
+      <a class="btn btn-default mb-4" href="?page=1">Frist</a>
+      <a class="btn btn-default mb-4" href="?page={{page_obj.previous_page_number}}">Previous</a>
+    {% endif %}
+
+    {% for num in page_obj.paginator.page_range %}
+      {% if page_obj.number == num %}
+        <a class="btn btn-primary mb-4" href="?page={{ num }}">{{ num }}</a>
+      {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'-3' %}
+        <a class="btn btn-primary mb-4" href="?page={{ num }}">{{ num }}</a>
+      {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+    <!--<ul class="pager">
+      <li><a href="?page={{ page_obj.next_page_number }}">Next</a></li>
+      <li><a href="?page={{ page_obj.paginator.num_pages }}">Last</a></li>
+    </ul>-->
+      <a class="btn btn-default mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
+      <a class="btn btn-default mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+    {% endif %}
+  {% endif %}
+</div>
+
+
+
+</div>
+{% endblock %}

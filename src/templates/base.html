@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html>
+<head>
+	<title>Blog</title>
+	<meta charset="utf-8">
+  	<meta name="viewport" content="width=device-width, initial-scale=1">
+  	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+		<style media="screen">
+		body{
+			background: cyan;
+			animation-name: bha;
+			animation-duration: 20s;
+			animation-iteration-count: infinite;
+
+		}
+		@keyframes bha {
+			0%{background-color: cyan;}
+			50%{background: green; }
+			100%{background: pink;}
+		}
+		</style>
+
+</head>
+<body>
+	<nav class="navbar navbar-default navbar-fixed-top">
+  		<div class="container-fluid">
+    		<div class="navbar-header">
+     		 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+      		  <span class="icon-bar"></span>
+       		  <span class="icon-bar"></span>
+        	  <span class="icon-bar"></span>
+      		 </button>
+      		 <a class="navbar-brand" href="{% url 'post_list' %}">Blog</a>
+   		</div>
+			<div class="theme-switch">
+  			<div class="switch"></div>
+			</div>
+    	<div class="collapse navbar-collapse" id="myNavbar">
+
+       		<ul class="nav navbar-nav navbar-right">
+        		<li><a href="{% url 'post_list' %}">Home</a></li>
+        		<li><a href="{% url 'about' %}">About</a></li>
+						{% if user.is_authenticated %}
+						<li><a href="{% url 'profile_list' %}">User</a></li>
+
+        		<li class="dropdown">
+        			<a class="dropdown-toggle" data-toggle="dropdown" href="#">Setting<span class="caret"></span></a>
+        			<ul class="dropdown-menu">
+            			<li><a href="{% url 'Profile_edit' %}">Edit Profile</a></li>
+            			<li><a href="{% url 'password_change' %}">Password Change</a></li>
+									<li><a href="{% url 'profile' user.profile.pk %}">View Profile</a></li>
+          			</ul>
+        		</li>
+						<li class="dropdown">
+        			<a class="dropdown-toggle" data-toggle="dropdown" href="#">Post<span class="caret"></span></a>
+        			<ul class="dropdown-menu">
+            			<li><a href="{% url 'post_new' %}">New Post</a></li>
+            			<li><a href="{% url 'post_draft_list' %}">Drafts</a></li>
+          			</ul>
+        		</li>
+            <li><a href="{% url 'contact' %}">Contact</a></li>
+            <li><a data-toggle="modal" data-target="#myModal1" >LogOut</a></li>
+            {% else %}
+        		<li class="dropdown">
+        			<a class="dropdown-toggle" data-toggle="dropdown" href="#">Join<span class="caret"></span></a>
+        			<ul class="dropdown-menu">
+            			<li><a href="{% url 'signup' %}">SignUp</a></li>
+            			<li><a href="{% url 'login' %}">LogIn</a></li>
+          			</ul>
+        		</li>
+          {% endif %}
+     		</ul>
+   		</div>
+  		</div>
+	</nav>
+	<div class="modal fade" id="myModal1" role="dialog" >
+	  <div class="modal-dialog" >
+	    <!-- Modal content-->
+	    <div class="modal-content" >
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        <h4 class="modal-title">Log Out:</h4>
+	      </div>
+	      <div class="modal-body">
+	        <form action="{% url 'logout' %}" method="post">{% csrf_token %}
+	          <p>Are you sure you want to LogOut.{{user.username}}</p>
+	          <button type="submit" class="btn btn-success">Yes</button>
+	        </form>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+{# The actual blog posts#}
+<br>
+      <div class="content container" style="margin-top:50px;">
+          <div class="row">
+              <div class="col-md-12">
+                <div class="blog_posts">
+                  {% if messages %}
+                    {% for message in messages %}
+                      <div class="alert alert{{message.tags}}" style="background:green; width:50%; height:50px;">
+                        <h5 style="color:white; font-family:Broadway; margin:0px auto; padding:0px;">{{message}}</h5>
+                      </div>
+                    {% endfor %}
+                  {% endif %}
+                  {% block content %}
+                  {% endblock %}
+
+                </div>
+
+              </div>
+          </div>
+      </div>
+
+</body>
+</html>
